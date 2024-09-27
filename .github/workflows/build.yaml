@@ -8,22 +8,7 @@ on:
 jobs:
   build:
     name: Build
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            arch: amd64
-            artifact_name: Rooted\ Emailer.exe
-            path: windows
-          - os: macos-latest
-            arch: amd64
-            artifact_name: Rooted\ Emailer
-            path: intel-mac
-          - os: macos-latest
-            arch: arm64
-            artifact_name: Rooted\ Emailer
-            path: arm-mac
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
@@ -43,31 +28,22 @@ jobs:
       run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
     - name: Build Wails app
-      env:
-        GOOS: ${{ matrix.os == 'windows-latest' && 'windows' || 'darwin' }}
-        GOARCH: ${{ matrix.arch }}
       run: |
         cd scoble.me/rooted/emailer/frontend
         npm install
         cd ..
-        wails build -platform=${{ env.GOOS }}/${{ matrix.arch }}
-
-    - name: Rename binary
-      run: |
-        mv build/bin/Rooted\ Emailer${{ matrix.os == 'windows-latest' && '.exe' || '' }} ${{ matrix.path }}/${{ matrix.artifact_name }}
+        wails build -platform=windows/amd64
+        mv build/bin/Rooted\ Emailer.exe windows/
+        wails build -platform=darwin/amd64
+        mv build/bin/Rooted\ Emailer.app intel-mac/
+        wails build -platform=darwin/arm64
+        mv build/bin/Rooted\ Emailer.app arm-mac/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.path }}/${{ matrix.artifact_name }}
         path: ${{ matrix.path }}/${{ matrix.artifact_name }}
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
 
     - name: Create Release
       id: create_release
@@ -77,7 +53,7 @@ jobs:
       with:
         files: |
           windows/Rooted\ Emailer.exe
-          intel-mac/Rooted\ Emailer
-          arm-mac/Rooted\ Emailer
+          intel-mac/Rooted\ Emailer.app
+          arm-mac/Rooted\ Emailer.app
         draft: false
         prerelease: false
