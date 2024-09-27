@@ -29,16 +29,17 @@ jobs:
 
     - name: Build Wails app
       run: |
+        mkdir -p windows intel-mac arm-mac
+        home=$(pwd)
         cd scoble.me/rooted/emailer/frontend
         npm install
         cd ..
-        mkdir -p windows intel-mac arm-mac
         wails build -platform=windows/amd64
-        mv build/bin/Rooted\ Emailer.exe windows/
+        mv build/bin/Rooted\ Emailer.exe $home/windows/
         wails build -platform=darwin/amd64
-        mv build/bin/Rooted\ Emailer.app intel-mac/
+        mv build/bin/Rooted\ Emailer.app $home/intel-mac/
         wails build -platform=darwin/arm64
-        mv build/bin/Rooted\ Emailer.app arm-mac/
+        mv build/bin/Rooted\ Emailer.app $home/arm-mac/
 
     - name: Show artifacts
       run: |
