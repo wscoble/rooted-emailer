@@ -43,8 +43,11 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ matrix.path }}/${{ matrix.artifact_name }}
-        path: ${{ matrix.path }}/${{ matrix.artifact_name }}
+        name: Rooted\ Emailer
+        path: |
+          windows/Rooted\ Emailer.exe
+          intel-mac/Rooted\ Emailer.app
+          arm-mac/Rooted\ Emailer.app
 
     - name: Create Release
       id: create_release
