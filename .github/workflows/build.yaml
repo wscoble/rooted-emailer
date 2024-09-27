@@ -40,6 +40,12 @@ jobs:
         wails build -platform=darwin/arm64
         mv build/bin/Rooted\ Emailer.app arm-mac/
 
+    - name: Show artifacts
+      run: |
+        ls -la windows
+        ls -la intel-mac
+        ls -la arm-mac
+
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
