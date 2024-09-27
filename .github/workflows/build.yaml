@@ -32,6 +32,7 @@ jobs:
         cd scoble.me/rooted/emailer/frontend
         npm install
         cd ..
+        mkdir -p windows intel-mac arm-mac
         wails build -platform=windows/amd64
         mv build/bin/Rooted\ Emailer.exe windows/
         wails build -platform=darwin/amd64

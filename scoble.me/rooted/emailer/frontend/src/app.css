@@ -501,6 +501,15 @@ button[type="submit"]:hover {
     font-size: 14px;
 }
 
+.copy-buttons button {
+    transition: background-color 0.6s ease;
+}
+
+.copy-buttons button:active {
+    background-color: #006400; /* Dark green */
+    transition: background-color 0.1s ease;
+}
+
 #participantForm input[type="text"],
 #participantForm input[type="email"],
 #participantForm input[type="number"] {
