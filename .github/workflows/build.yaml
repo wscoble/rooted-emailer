@@ -56,12 +56,25 @@ jobs:
           intel-mac/Emailer.app
           arm-mac/Emailer.app
 
+    - name: Get version from wails.json
+      id: get_version
+      run: |
+        VERSION=$(jq -r '.info.productVersion' scoble.me/rooted/emailer/wails.json)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        tag_name: v${{ env.VERSION }}
+        name: Release v${{ env.VERSION }}
+        body: |
+          ## Download Instructions
+          - For Windows users: Download `Emailer.exe` from the `windows` folder
+          - For Intel Mac users: Download `Emailer.app` from the `intel-mac` folder
+          - For M1/M2/M3/M4 Mac users: Download `Emailer.app` from the `arm-mac` folder
         files: |
           windows/Emailer.exe
           intel-mac/Emailer.app
