@@ -1,0 +1,21 @@
+{{- define "header" -}}
+{{ .Name }},
+{{- end -}}
+
+{{- define "snacks" -}}
+{{- if eq .Snacks .CurrentWeek }}
+
+You've signed up for snacks and sharing. If you'd like to wait to share your stories until later during Rooted, please let us know.
+{{- else if gt .Snacks .CurrentWeek }}
+
+You've signed up for snacks and sharing for week {{ .Snacks }}. If you'd like to share your stories this week, please let us know.
+{{- end }}
+{{- end -}}
+
+{{- define "footer" }}
+
+We encourage you to bring your bible with you.
+
+God bless you,<br/>
+{{ .Facilitators }}
+{{- end -}}

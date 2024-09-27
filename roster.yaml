@@ -1,0 +1,35 @@
+attendees:
+- name: Jon and Kaci Thompson
+  snacks: 2
+  email:
+  - family@tpsnv.com
+- name: Alan Wong and Jenny Lee
+  snacks: 3
+  email:
+  - klunwong@gmail.com
+  - lee340rezzo@gmail.com
+- name: Evan and Laurie Kogen
+  snacks: 4
+  email:
+  - evankgn@yahoo.com
+  - lauriekogen@yahoo.com
+- name: Mckensy and Marlen Long
+  snacks: 5
+  email:
+  - mckensylong@hotmail.com
+- name: Steven and Michelly Quinn
+  snacks: 7
+  email:
+  - quinntessential73@gmail.com
+# - name: Josh and Alis Roose
+#   snacks: 8
+#   email:
+#   - joshroose@gmail.com
+# - name: Mike and Gabrielle Persi
+#   snacks: 9
+#   email:
+#   - mpersi45@gmail.com
+- name: Sunshine and Aaron Frans
+  snacks: 6
+  email:
+  - sunshine.frans@gmail.com

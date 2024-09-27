@@ -1,0 +1,541 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    background-color: #2c5e1a; /* Darker green */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px; /* Fixed height for the header */
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+#logo {
+    height: 64px; /* 80% of 80px header height */
+    width: auto;
+    object-fit: contain;
+}
+
+.result {
+    height: 20px;
+    line-height: 20px;
+    margin: 1.5rem auto;
+}
+
+.input-box .btn {
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    border: none;
+    margin: 0 0 0 20px;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.input-box .btn:hover {
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+    color: #333333;
+}
+
+.input-box .input {
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    background-color: rgba(240, 240, 240, 1);
+    -webkit-font-smoothing: antialiased;
+}
+
+.input-box .input:hover {
+    border: none;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.input-box .input:focus {
+    border: none;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+#app {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+#renderedTemplate {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    text-align: left;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    max-width: 100%; /* Ensure the rendered template doesn't exceed its container */
+    overflow-wrap: break-word; /* Allow long words to break and wrap */
+}
+
+#renderedTemplate h1, #renderedTemplate h2, #renderedTemplate h3, #renderedTemplate h4, #renderedTemplate h5, #renderedTemplate h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+#renderedTemplate h1 { font-size: 2em; }
+#renderedTemplate h2 { font-size: 1.5em; }
+#renderedTemplate h3 { font-size: 1.25em; }
+#renderedTemplate h4 { font-size: 1em; }
+#renderedTemplate h5 { font-size: 0.875em; }
+#renderedTemplate h6 { font-size: 0.85em; }
+
+#renderedTemplate p, #renderedTemplate blockquote, #renderedTemplate ul, #renderedTemplate ol, #renderedTemplate dl, #renderedTemplate table, #renderedTemplate pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+#renderedTemplate code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27,31,35,0.05);
+    border-radius: 3px;
+}
+
+#renderedTemplate pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border-radius: 3px;
+}
+
+#renderedTemplate pre code {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+}
+
+.error {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+#backButton {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#backButton:hover {
+    background-color: white;
+    color: #2c5e1a;
+}
+
+#renderedEmails {
+    margin-top: 0;
+    padding: 0;
+    border-top: none;
+}
+
+#renderedEmails ul {
+    padding-left: 0;
+}
+
+#renderedEmails li {
+    margin-bottom: 10px;
+}
+
+#renderedEmails a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+#renderedEmails a:hover {
+    text-decoration: underline;
+}
+
+.copy-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.copy-buttons button,
+#newParticipantButton {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.copy-buttons button:hover,
+#newParticipantButton:hover {
+    background-color: #45a049;
+}
+
+.container {
+    flex: 1;
+    margin-left: 220px; /* 200px sidebar + 20px padding */
+    padding: 20px;
+    max-width: calc(100% - 220px);
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 100px; /* Increase this value to push content below the header */
+    overflow-y: auto;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.header-controls label {
+    color: white;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.header-controls input {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.header-controls input#facilitators {
+    width: 150px; /* Wide enough for two first names */
+}
+
+.header-controls input#currentWeek {
+    width: 40px; /* Wide enough for two numbers */
+}
+
+.header-controls button {
+    background-color: white;
+    color: #2c5e1a;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.header-controls button:hover {
+    background-color: #e0e0e0;
+}
+
+.header-controls > * {
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .header-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-controls > * {
+        margin-bottom: 5px;
+    }
+
+    .header-controls input#facilitators,
+    .header-controls input#currentWeek {
+        width: 100%; /* Full width on small screens */
+    }
+}
+
+#backButton {
+    margin-left: 10px;
+}
+
+.main-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    overflow-y: auto;
+}
+
+.sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    height: 100%;
+    overflow-y: auto;
+    position: fixed;
+    left: 0;
+    top: 80px; /* Match the header height */
+}
+
+.container {
+    flex: 1;
+    margin-left: 220px; /* 200px sidebar + 20px padding */
+    padding: 20px;
+    max-width: calc(100% - 220px);
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto;
+}
+
+#renderedEmails {
+    margin-top: 0;
+    padding: 0;
+    border-top: none;
+}
+
+#renderedEmails ul {
+    padding-left: 0;
+}
+
+#renderedEmails li {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        top: 100px; /* Adjust for mobile view */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+
+    .container {
+        margin-left: 0;
+        max-width: 100%;
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.participant-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.participant-controls input {
+    width: 150px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.participant-controls button,
+#newParticipantButton,
+#deleteParticipantButton {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.participant-controls button:hover,
+#newParticipantButton:hover {
+    background-color: #45a049;
+}
+
+#deleteParticipantButton {
+    background-color: #d32f2f;
+}
+
+#deleteParticipantButton:hover {
+    background-color: #b71c1c;
+}
+
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .participant-controls {
+        margin-top: 10px;
+    }
+
+    .participant-controls input,
+    .participant-controls button,
+    #newParticipantButton,
+    #deleteParticipantButton {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+#renderedEmails #backButton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+#renderedEmails #backButton:hover {
+    background-color: #45a049;
+}
+
+.action-buttons,
+.copy-buttons {
+    margin-top: 20px; /* Add top margin to these button containers */
+}
+
+/* Add these new styles */
+#participantForm {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#participantForm h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#participantForm .input-group {
+    margin-bottom: 20px;
+}
+
+#participantForm label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#participantForm input[type="text"],
+#participantForm input[type="email"],
+#participantForm input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+#participantForm button[type="submit"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#participantForm button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    #participantForm {
+        max-width: 100%;
+    }
+}

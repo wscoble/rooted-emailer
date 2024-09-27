@@ -1,0 +1,81 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            arch: amd64
+            artifact_name: Rooted\ Emailer.exe
+            path: windows
+          - os: macos-latest
+            arch: amd64
+            artifact_name: Rooted\ Emailer
+            path: intel-mac
+          - os: macos-latest
+            arch: arm64
+            artifact_name: Rooted\ Emailer
+            path: arm-mac
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Install Wails
+      run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+    - name: Build Wails app
+      env:
+        GOOS: ${{ matrix.os == 'windows-latest' && 'windows' || 'darwin' }}
+        GOARCH: ${{ matrix.arch }}
+      run: |
+        npm install
+        wails build -platform=${{ env.GOOS }}/${{ matrix.arch }}
+
+    - name: Rename binary
+      run: |
+        mv build/bin/Rooted\ Emailer${{ matrix.os == 'windows-latest' && '.exe' || '' }} ${{ matrix.path }}/${{ matrix.artifact_name }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.path }}/${{ matrix.artifact_name }}
+        path: ${{ matrix.path }}/${{ matrix.artifact_name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: |
+          windows/Rooted\ Emailer.exe
+          intel-mac/Rooted\ Emailer
+          arm-mac/Rooted\ Emailer
+        draft: false
+        prerelease: false

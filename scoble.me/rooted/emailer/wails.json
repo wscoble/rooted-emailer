@@ -1,0 +1,21 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "Rooted Emailer",
+  "outputfilename": "Rooted Emailer",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "Scott Scoble",
+    "email": "scott@scoble.me"
+  },
+  "info": {
+    "companyName": "Scoblelife",
+    "productName": "Rooted Emailer",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright © 2024 ScobleLife",
+    "comments": "Built using Wails (https://wails.io)"
+  },
+  "icon": "frontend/src/assets/images/logo.png"
+}
