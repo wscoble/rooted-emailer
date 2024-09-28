@@ -1,56 +1,56 @@
-name: Build and Deploy Static SPA
+# name: Build and Deploy Static SPA
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+#     - name: Setup Node.js
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: '20'
 
-    - name: Install dependencies and build
-      run: |
-        cd scoble.me/rooted/emailer/frontend
-        npm install
-        npm run build:static
+#     - name: Install dependencies and build
+#       run: |
+#         cd scoble.me/rooted/emailer/frontend
+#         npm install
+#         npm run build:static
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./scoble.me/rooted/emailer/dist
+#     - name: Deploy to GitHub Pages
+#       uses: peaceiris/actions-gh-pages@v3
+#       with:
+#         github_token: ${{ secrets.GITHUB_TOKEN }}
+#         publish_dir: ./scoble.me/rooted/emailer/dist
 
-    - name: Get version from wails.json
-      id: get_version
-      run: |
-        VERSION=$(jq -r '.info.productVersion' scoble.me/rooted/emailer/wails.json)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+#     - name: Get version from wails.json
+#       id: get_version
+#       run: |
+#         VERSION=$(jq -r '.info.productVersion' scoble.me/rooted/emailer/wails.json)
+#         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ env.VERSION }}
-        name: Release v${{ env.VERSION }}
-        body: |
-          ## Rooted Emailer Web App
+#     - name: Create Release
+#       id: create_release
+#       uses: softprops/action-gh-release@v2
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       with:
+#         tag_name: v${{ env.VERSION }}
+#         name: Release v${{ env.VERSION }}
+#         body: |
+#           ## Rooted Emailer Web App
           
-          This release contains the web version of the Rooted Emailer application.
+#           This release contains the web version of the Rooted Emailer application.
           
-          Access the application at: https://yourusername.github.io/rooted-emailer/
+#           Access the application at: https://yourusername.github.io/rooted-emailer/
           
-          (Replace 'yourusername' with your actual GitHub username)
-        draft: false
-        prerelease: false
+#           (Replace 'yourusername' with your actual GitHub username)
+#         draft: false
+#         prerelease: false
