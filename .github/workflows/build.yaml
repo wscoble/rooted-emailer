@@ -1,4 +1,4 @@
-name: Build and Release
+name: Build and Deploy Static SPA
 
 on:
   push:
@@ -6,55 +6,29 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build
-    runs-on: macos-latest
+  build-and-deploy:
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.22'
-
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '22'
+        node-version: '20'
 
-    - name: Install Wails
-      run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-
-    - name: Build Wails app
+    - name: Install dependencies and build
       run: |
-        mkdir -p windows intel-mac arm-mac
-        home=$(pwd)
         cd scoble.me/rooted/emailer/frontend
         npm install
-        cd ..
-        wails build -platform=windows/amd64
-        mv build/bin/Emailer.exe $home/windows/
-        wails build -platform=darwin/amd64
-        mv build/bin/Emailer.app $home/intel-mac/
-        wails build -platform=darwin/arm64
-        mv build/bin/Emailer.app $home/arm-mac/
+        npm run build:static
 
-    - name: Show artifacts
-      run: |
-        ls -la windows
-        ls -la intel-mac
-        ls -la arm-mac
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: Emailer
-        path: |
-          windows/Emailer.exe
-          intel-mac/Emailer.app
-          arm-mac/Emailer.app
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./scoble.me/rooted/emailer/dist
 
     - name: Get version from wails.json
       id: get_version
@@ -71,13 +45,12 @@ jobs:
         tag_name: v${{ env.VERSION }}
         name: Release v${{ env.VERSION }}
         body: |
-          ## Download Instructions
-          - For Windows users: Download `Emailer.exe` from the `windows` folder
-          - For Intel Mac users: Download `Emailer.app` from the `intel-mac` folder
-          - For M1/M2/M3/M4 Mac users: Download `Emailer.app` from the `arm-mac` folder
-        files: |
-          windows/Emailer.exe
-          intel-mac/Emailer.app
-          arm-mac/Emailer.app
+          ## Rooted Emailer Web App
+          
+          This release contains the web version of the Rooted Emailer application.
+          
+          Access the application at: https://yourusername.github.io/rooted-emailer/
+          
+          (Replace 'yourusername' with your actual GitHub username)
         draft: false
         prerelease: false

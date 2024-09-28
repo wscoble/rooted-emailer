@@ -1,0 +1,12 @@
+{
+    "source": ["./build/bin/Emailer.app"],
+    "bundle_id": "me.scoble.emailer",
+    "apple_id": {
+      "username": "punkdgeek@gmail.com",
+      "password": "@env:APPLE_PASSWORD",
+      "provider": "ABCDE12345"
+    },
+    "sign": {
+      "application_identity": "Apple Development: William Scoble (5H74Y4DXJ6)"
+    }
+  }

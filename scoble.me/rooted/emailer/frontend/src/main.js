@@ -3,7 +3,30 @@ import './app.css';
 import { marked } from 'marked';
 
 import logo from './assets/images/logo.png';
-import { RenderTemplate, ListTemplates } from '../wailsjs/go/main/App';
+
+// Create a Web Worker
+const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
+
+// Create a promise-based wrapper for worker communication
+function workerRequest(action, data) {
+  return new Promise((resolve, reject) => {
+    const messageHandler = (event) => {
+      if (event.data.action === `${action}Result`) {
+        worker.removeEventListener('message', messageHandler);
+        resolve(event.data.result);
+      } else if (event.data.error) {
+        worker.removeEventListener('message', messageHandler);
+        reject(new Error(event.data.error));
+      }
+    };
+    worker.addEventListener('message', messageHandler);
+    worker.postMessage({ action, data });
+  });
+}
+
+// Replace Wails imports with worker-based functions
+const RenderTemplate = (data) => workerRequest('RenderTemplate', data);
+const ListTemplates = () => workerRequest('ListTemplates');
 
 let facilitators = '';
 let currentWeek = 0;
@@ -95,7 +118,7 @@ function createParticipantForm() {
 // Update addRenderedEmail function
 function addRenderedEmail(templateData, renderedTemplate) {
     renderedEmails[templateData.Name] = {
-        name: templateData.Name,  // Add this line
+        name: templateData.Name,
         email: templateData.Emails[0],
         snacks: templateData.Snacks,
         weekRendered: templateData.CurrentWeek,
@@ -115,7 +138,11 @@ async function renderTemplate(templateData) {
         
         addRenderedEmail(templateData, renderedTemplate);
         
-        updateView(createRenderedView(renderedTemplate));
+        updateView(createRenderedView({
+            ...renderedTemplate,
+            name: templateData.Name,
+            snacks: templateData.Snacks
+        }));
     } catch (error) {
         console.error('Error rendering template:', error);
         alert(`Error rendering template: ${error.message}`);
@@ -128,9 +155,9 @@ function createRenderedView(renderedTemplate) {
     <div class="rendered-content">
         <div class="action-buttons">
             <div class="participant-controls">
-                <input type="text" id="updateName" placeholder="Update Name" value="${renderedTemplate.name}">
-                <input type="email" id="updateEmail" placeholder="Update Email" value="${renderedTemplate.emailAddresses[0]}">
-                <input type="number" id="updateSnacks" placeholder="Update Snacks Week" value="${renderedTemplate.snacks}">
+                <input type="text" id="updateName" placeholder="Update Name" value="${renderedTemplate.name || ''}">
+                <input type="email" id="updateEmail" placeholder="Update Email" value="${renderedTemplate.emailAddresses[0] || ''}">
+                <input type="number" id="updateSnacks" placeholder="Update Snacks Week" value="${renderedTemplate.snacks || ''}">
                 <button id="updateParticipantButton">Update</button>
                 <button id="deleteParticipantButton">Delete</button>
             </div>
@@ -279,14 +306,14 @@ document.querySelector('#app').addEventListener('click', async (e) => {
     } else if (e.target.id === 'copyBodyButton') {
         copyToClipboard('body');
     } else if (e.target.id === 'updateParticipantButton') {
-        updateParticipant();
+        await updateParticipant(); // Make this call asynchronous
     } else if (e.target.id === 'deleteParticipantButton') {
         deleteParticipant();
     }
 });
 
 // Add these new functions
-function updateParticipant() {
+async function updateParticipant() {
     const name = document.getElementById('updateName').value;
     const email = document.getElementById('updateEmail').value;
     const snacks = parseInt(document.getElementById('updateSnacks').value, 10);
@@ -310,7 +337,8 @@ function updateParticipant() {
         Facilitators: facilitators
     };
 
-    renderTemplate(templateData);
+    // Re-render the template with the updated data
+    await renderTemplate(templateData);
 }
 
 function deleteParticipant() {

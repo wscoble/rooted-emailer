@@ -1,3 +1,7 @@
 build/bin
 node_modules
 frontend/dist
+dist
+
+# will add to personal global later
+.DS_Store
